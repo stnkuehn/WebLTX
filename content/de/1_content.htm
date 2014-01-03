@@ -1,0 +1,153 @@
+<?php DefTopAnchor('Benutzung','Benutzung',2)?>
+
+<?php DefChapter('Inhalte erstellen','Inhalte erstellen','Inhalte erstellen')?>
+
+<?php DefSection('Grundlegendes','Grundlegendes','Grundlegendes')?>
+
+<p>
+Die Inhalte befinden sich alle im Verzeichnis <var>content</var> sortiert nach Sprachen. Die verfügbaren Sprachen können in der Datei <var>user_settings.php</var> festgelegt werden (Siehe Abschnitt <?php Ref('Interne Struktur')?>). Dabei ist darauf zu achten, dass die Codes den möglichen Ländercodes entsprechen, die in <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a> definiert sind.
+</p>
+
+<p>
+WebLTX verwendet normales HTML, welches sich mit <?php RefFree('Funktionen','eingebetteten PHP-Funktionsaufrufen')?> erweitern lässt. Jede verfügbare Sprache enthält eine oder mehrere HTML-Dateien. Grundsätzlich wird alles, was in einer HTML-Datei enthalten ist, zusammen dargestellt. Das gilt insbesondere auch dann, wenn eine einzige HTML-Datei mehrere Kapitel oder nur Teile davon enthält. Eine HTML-Datei entspricht damit dem, was in einem Buch eine Seite wäre. Im Gegensatz zum Buch, können in WebLTX Seiten eine sehr unterschiedliche Größe aufweisen.
+</p>
+
+<p>
+Die alphabetische Reihenfolge der Dateinamen ist im Übrigen ebenfalls von Bedeutung, da durch sie die Nummerierung der Überschriften beeinflusst wird. Es ist daher sinnvoll, die enthaltenen HTML-Dateien mit einem Zahlenprefix zu versehen.
+</p>
+
+<?php DefSection('Verfügbare Funktionen','Funktionen','Funktionen')?>
+
+<?php DefSubSection('Überschriften','Überschriften','Überschriften')?>
+
+<p>
+Es gibt drei Level von Überschriften:
+<ul>
+<li>Kapitel</li>
+<li>Abschnitte</li>
+<li>Unterabschnitte</li>
+</ul>
+</p>
+
+<p>
+Kapitel werden mit 
+<div class="code"><pre>
+&lt;?php DefChapter('Name','Kurzname','Label')?&gt;
+</pre></div>
+erstellt. <var>Name</var> ist dabei die im Fließtext dargestellte Überschrift. Der <var>Kurzname</var> ist optional und wird für das Menü auf der linken Seite verwendet. Das <var>Label</var> ist ebenfalls optional. Wenn es weggelassen wird, erhält die Überschrift keine Nummerierung und kann später auch nicht referenziert werden (Anmerkung: man kann trotzdem zur Überschrift springen, wenn man zusätzlich noch <?php RefFree('Anker','<var>DefHiddenAnchor</var>')?> verwendet).
+</p>
+
+<p>
+Abschnitte werden mit
+<div class="code"><pre>
+&lt;?php DefSection('Name','Kurzname','Label')?&gt;
+</pre></div>
+und Unterabschnitte mit 
+<div class="code"><pre>
+&lt;?php DefSubSection('Name','Kurzname','Label')?&gt;
+</pre></div>
+erstellt. Für die Parameter gilt das Gleiche, wie für <var>DefChapter</var>.
+</p>
+
+<?php DefSubSection('Formeln','Formeln','Formeln')?>
+
+<p>
+Wie in LaTeX gibt es auch in WebLTX grundsätzlich zwei verschiedene Typen von Formeln:
+<ul>
+<li>Formeln im Fließtext sowie</li>
+<li>nummerierte und abgesetzte Formeln.</li>
+</ul>
+</p>
+
+<p>
+Eine Textformel ist normalerweise kurz und besteht oftmals nur aus einem Symbol zur Bezeichnung einer physikalischen Größe oder ähnlichem. Gelegentlich werden auch einfache Zusammenhänge in Form kurzer Gleichungen in Form von Textformeln dargestellt.
+</p>
+
+<p>
+Definiert wird eine Textformel mit 
+<div class="code"><pre>
+&lt;?php DefEqn('a^2 = b^2 + c^2')?&gt;
+</pre></div>
+Der Output erscheint im Fließtext, wie hier dargestellt: <?php DefEqn('a^2 = b^2 + c^2')?>, und enthält keine Nummerierung. Die Syntax ist kompatibel zu LaTeX.
+</p>
+
+<p>
+Möchte man eine Formel für die spätere Verwendung referenzierbar machen, so kann man sie in Form einer abgesetzten Formel definieren. Das Kommando dazu lautet
+<div class="code"><pre>
+&lt;?php DefEqnB('f(x) = \sqrt{1 -x^2}','Label')?&gt;
+</pre></div>
+Der Output sieht so aus:
+<?php DefEqnB('f(x) = \sqrt{1 -x^2}','formel1')?>
+Der zweite Parameter <var>Label</var> kann im Übrigen weggelassen werden. In diesem Fall erhält die Formel keine Nummerierung, erscheint aber dennoch in abgesetzter Form, d.h. so wie hier dargestellt:
+<?php DefEqnB('f(x) = \sqrt{1 -x^2}')?>
+</p>
+
+<p>
+Formeln können im Übrigen überall im Text verlinkt werden. Siehe hierzu Abschnitt <?php RefByTitle('Referenzen')?>.
+</p>
+
+<?php DefSubSection('Abbildungen','Abbildungen','Abbildungen')?>
+
+<p>
+Ein Bild sagt bekanntlich mehr als tausend Worte. Trotzdem sollten Bilder nicht für sich allein stehen, sondern über eine Beschreibung verfügen, sowie im Text referenziert und verlinkt werden können. In WebLTX können Abbildungen über 
+<div class="code"><pre>
+&lt;?php DefFigure('Filename','Beschreibung','Format-Options','Label')?&gt;
+</pre></div>
+eingefügt werden. Dabei ist zu beachten, dass der Name der Datei <var>Filename</var> relativ zum Content-Verzeichnis anzugeben ist. <var>Beschreibung</var> und <var>Label</var> sind selbsterklärend. Mit der Variable <var>Format-Options</var> lässt sich das Aussehen der Abbildung beeinflussen, da alle hier angegebenen Parameter an die <var>style</var>-Variable im HTML-Code angehängt werden.
+</p>
+
+<p>
+Hier ein Beispiel: Der Code 
+<div class="code"><pre>
+&lt;?php DefFigure('../../images/exsample.svg','Beschreibung','width:60%;margin-left:10%','figure1')?&gt;
+</pre></div>
+ergibt
+<?php DefFigure('../../images/exsample.svg','Beschreibung','width:60%;margin-left:10%','figure1')?>
+</p>
+
+<p>
+Die dargestellte Abbildung wurde im Übrigen mit dem <a href="http://sourceforge.net/projects/ipe7/">Programm ipe</a> erzeugt. Es eignet sich ganz besonders für die Erstellung von beliebig skalierbaren Vektorgrafiken in EPS und PDF. Auch die Umwandlung in SVG ist möglich (mit <var>iperender -svg</var>). Ein besonderes Feature von ipe ist weiterhin die Möglichkeit LaTeX-Code in die Grafik zu integrieren
+</p>
+
+<?php DefSubSection('Referenzen und Links','Referenzen und Links','Referenzen')?>
+
+<p>
+Alle nummerierten Objekte können in verschiedener Weise referenziert und verlinkt werden. Die einzelnen Methoden unterscheiden sich dabei im angezeigten Text des Links. Beispielsweise ist es möglich, die gleiche Überschrift über den Titel <?php RefByTitle('Funktionen')?>, den Kurztitel <?php RefByShortname('Funktionen')?>, die Nummer <?php Ref('Funktionen')?> oder <?php RefFree('Funktionen','mit einer freien Bezeichnung')?> zu referenzieren.
+</p>
+
+<p>
+Hier der jeweilige Code:
+<div class="code"><pre>
+&lt;?php RefByTitle('Funktionen')?&gt;
+</pre></div>
+<div class="code"><pre>
+&lt;?php RefByShortname('Funktionen')?&gt;
+</pre></div>
+<div class="code"><pre>
+&lt;?php Ref('Funktionen')?&gt;
+</pre></div>
+<div class="code"><pre>
+&lt;?php RefFree('Funktionen','mit einer freien Bezeichnung')?&gt;
+</pre></div>
+</p>
+
+<?php DefSubSection('Anker','Anker','Anker')?>
+
+<p>
+Mit Ankern lassen sich unsichtbare Markierungen in der Webpage anbringen. Derzeit gibt es nur zwei verschiedene Funktionen. 
+</p>
+
+<p>
+Mit <var>DefTopAnchor</var> lassen sich Lesezeichen definieren, die in der oberen waagerechten Linkleiste angezeigt werden. Beispielsweise wurde mit 
+<div class="code"><pre>
+&lt;?php DefTopAnchor('Einführung','Einführung',1)?&gt;
+</pre></div>
+der oben ganz links stehende Eintrag erzeugt. Durch Anklicken des Links gelangt man sofort an die Stelle, an der diese Markierung erzeugt wurde. Die Nummer (hier 1) gibt an, in welcher Reihenfolge die Links dargestellt werden sollen.
+</p>
+
+<p>
+Die zweite Möglichkeit ist der verborgene Anker, welcher mit <var>DefHiddenAnchor</var> angelegt wird. Mit diesem ist es möglich auf eine Seite zu verlinken, die ansonsten durch keine andere Möglichkeit erreichbar wäre. Ein Beispiel für die Anwendung des verborgenen Ankers ist das <?php RefFree('impressum','Impressum')?>.
+</p>
+
+
+
