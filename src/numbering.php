@@ -258,7 +258,7 @@ function FormatReference($Page,$Lang,$Ref,$Text,$Ext='')
 {
 	$refstr = '';
 	if ($Ref != '') $refstr = '#'.$Ref;
-	return '<a '.$Ext.' href="index?page='.$Page.'&amp;lang='.$Lang.$refstr.'">'.$Text.'</a>';
+	return '<a '.$Ext.' href="index.php?page='.$Page.'&amp;lang='.$Lang.$refstr.'">'.$Text.'</a>';
 }
 
 function RefGeneric($Label,$Mode,$Ext='',$Text='')
