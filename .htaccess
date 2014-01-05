@@ -1,0 +1,15 @@
+# maps the empty URL to index.php
+DirectoryIndex index.php
+
+# no directory listing
+Options -Indexes
+
+Order Deny,Allow
+Deny from all
+
+# allow only index.php and the empty file
+# which you get, if you enter only the URL 
+<FilesMatch "^(index\.php|)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
