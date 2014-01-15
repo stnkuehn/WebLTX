@@ -102,6 +102,12 @@ function RefFree($Label,$Text,$Ext='')
 	echo RefGeneric($Label,'free',$Ext,$Text);
 }
 
+function RefCite($ID)
+{
+	# ToDo: implement literatur reference
+	echo '['.$ID.']';
+}
+
 // === for template ===
 
 function GetTitel()
@@ -171,5 +177,7 @@ function GetNavLinks()
 	$res .= '</tr></table>';
 	echo $res;
 }
+
+
 
 

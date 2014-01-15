@@ -241,7 +241,7 @@ function DefFigureGeneric($File,$CapLabel,$Description='',$Style='',$Label='')
 	$FilewP = './content/'.$Language.'/'.$File;
 
 	$text = '<dl class="figure" style="'.$Style.'">';
-	$text .= '<dt class="figure"><img  class="figure" src='.$FilewP.' alt=""/></dt>';
+	$text .= '<dt class="figure"><embed src="'.$FilewP.'" type="image/svg+xml" style="width:100%;height:100%"/></dt>';
 	$text .= '<dd class="figure">'.$CapLabel.' '.GetNumberString($Label);
 	if ($Description != '')
 	{
