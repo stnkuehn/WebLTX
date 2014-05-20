@@ -42,6 +42,7 @@ function DefEqn($Latex)
 // equation in block form. Can be referenced by a label.
 function DefEqnB($Latex,$Label='')
 {
+	if ($Label=='') $Label=$Latex;
 	echo DefEqnGeneric($Latex,'block',$Label);
 }
 

@@ -10,6 +10,25 @@
 <link rel="stylesheet" href="template/screen.css" media="screen">
 <link rel="stylesheet" href="template/print.css" media="print">
 <title><?php GetTitel()?></title>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  TeX: {
+	Macros: {
+      intfunc: "{\\rm \\sqcap}",
+	  sign: "{\\rm sign}",
+      vc: ["{\\mathbf{#1}}",1],
+      d: ["{\\mathrm{d}{#1}}", 1]
+    }
+  }
+});
+</script>
 </head>
 
 <body>

@@ -182,7 +182,7 @@ function DefSectionGeneric($LongName,$ShortName,$Label,$Stage)
 	$nbr = GetNumberString($Label);
 	if ($nbr != '') $nbr .= ' ';
 	
-	return '<a name="'.$NumberedObjects[$Label]['id'].'"></a><h'.($Stage+1).'>'.
+	return '<a name="'.$NumberedObjects[$Label]['id'].'"><h'.($Stage+1).'>'.
 		$nbr.$LongName.'</h'.($Stage+1).'></a>';
 }
 
@@ -201,21 +201,15 @@ function DefEqnGeneric($latex, $type = '', $label = '')
 {
 	global $NumberedObjects;
 
+	$output = '';
 	if ($type == 'block')
 	{
-		$output = '<table class="eqn"><tr class="eqn"><td class="eqn" width=90%><div class="eqn"><math>';
+		$output = '<table class="eqn"><tr class="eqn"><td class="eqn" width=90%><div class="eqn">';
 		DefineNumberedObject($label,'equation');
-	}
-	else
-	{
-		$output = '<math>';
-	}
-
-	$output .= '<mrow>'.latex2mathml($latex).'</mrow>';
-
-	if ($type == 'block')
-	{
-		$output .= '</math></div></td><td class="eqn">';
+		$output .= '$$';
+		$output .= $latex;
+		$output .= '$$';
+		$output .= '</div></td><td class="eqn">';
 		if ($label != '')
 		{
 			$output .= '<a name="'.$NumberedObjects[$label]['id'].'"><div class="eqnbr">('.
@@ -225,7 +219,9 @@ function DefEqnGeneric($latex, $type = '', $label = '')
 	}
 	else
 	{
-		$output .= '</math>';
+		$output .= '\\(';
+		$output .= $latex;
+		$output .= '\\)';
 	}
 
 	return $output;
@@ -234,13 +230,15 @@ function DefEqnGeneric($latex, $type = '', $label = '')
 function DefFigureGeneric($File,$CapLabel,$Description='',$Style='',$Label='')
 {
 	global $Language;
+	global $NumberedObjects;
 	
 	if ($Label == '') $Label = $File;
 	DefineNumberedObject($Label,'figure');
 	
 	$FilewP = './content/'.$Language.'/'.$File;
 
-	$text = '<dl class="figure" style="'.$Style.'">';
+	$text = '<a name="'.$NumberedObjects[$Label]['id'].'"></a>';
+	$text .= '<dl class="figure" style="'.$Style.'">';
 	$text .= '<dt class="figure"><embed src="'.$FilewP.'" type="image/svg+xml" style="width:100%;height:100%"/></dt>';
 	$text .= '<dd class="figure">'.$CapLabel.' '.GetNumberString($Label);
 	if ($Description != '')

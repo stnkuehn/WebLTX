@@ -20,7 +20,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once('latex2mathml.php');
 include_once('numbering.php');
 include_once('interface.php');
 
