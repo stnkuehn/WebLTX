@@ -42,6 +42,7 @@ function DefEqn($Latex)
 // equation in block form. Can be referenced by a label.
 function DefEqnB($Latex,$Label='')
 {
+	if ($Label=='') $Label=$Latex;
 	echo DefEqnGeneric($Latex,'block',$Label);
 }
 
@@ -100,6 +101,12 @@ function Ref($Label,$Ext='')
 function RefFree($Label,$Text,$Ext='')
 {
 	echo RefGeneric($Label,'free',$Ext,$Text);
+}
+
+function RefCite($ID)
+{
+	# ToDo: implement literatur reference
+	echo '['.$ID.']';
 }
 
 // === for template ===
@@ -171,5 +178,7 @@ function GetNavLinks()
 	$res .= '</tr></table>';
 	echo $res;
 }
+
+
 
 

@@ -20,41 +20,99 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function remp($str)
+$paren_open = array('{','(','[');
+$paren_close = array('}',')',']');
+
+$symbols = array(
+	'\,' => '&#8290;',
+	'\;' => '&nbsp;',
+	'\int' => '&int;',
+	'\infty' => '&#x221E;',
+	'\alpha' => '&alpha;',
+	'\Beta' => '&Beta;',	
+	'\beta' => '&beta;',
+	'\Gamma' => '&Gamma;',
+	'\gamma' => '&gamma;',
+	'\Delta' => '&Delta;',
+	'\delta' => '&delta;',
+	'\Epsilon' => '&Epsilon;',
+	'\epsilon' => '&epsilon;',
+	'\Zeta' => '&Zeta;',
+	'\zeta' => '&zeta;',
+	'\Eta' => '&Eta;',
+	'\eta' => '&eta;',
+	'\Theta' => '&Theta;',
+	'\theta' => '&theta;',
+	'\Iota' => '&Iota;',
+	'\iota' => '&iota;',
+	'\Kappa' => '&Kappa;',
+	'\kappa' => '&kappa;',
+	'\Lambda' => '&Lambda;',
+	'\lambda' => '&lambda;',
+	'\Mu' => '&Mu;',
+	'\mu' => '&mu;',
+	'\Nu' => '&Nu;',
+	'\nu' => '&nu;',
+	'\Xi' => '&Xi;',
+	'\xi' => '&xi;',
+	'\Omicron' => '&Omicron;',
+	'\omicron' => '&omicron;',
+	'\Pi' => '&Pi;',
+	'\pi' => '&pi;',
+	'\Rho' => '&Rho;',
+	'\rho' => '&rho;',
+	'\Sigma' => '&Sigma;',
+	'\sigma' => '&sigma;',
+	'\Tau' => '&Tau;',
+	'\tau' => '&tau;',
+	'\Upsilon' => '&Upsilon;',
+	'\upsilon' => '&upsilon;',
+	'\Phi' => '&Phi;',
+	'\phi' => '&phi;',
+	'\Chi' => '&Chi;',
+	'\chi' => '&chi;',
+	'\Psi' => '&Psi;',
+	'\psi' => '&psi;',
+	'\Omega' => '&Omega;',
+	'\omega' => '&omega;',
+	'\in' => '&#x2208',
+	'\approx' => '&#x2248;'
+);
+
+function is_zero($a)
 {
-	if ($str == "") return $str;
-	while (($str != "") && ($str[0] == '{') && (substr($str, -1, 1) == '}'))
+	for ($i=0;$i<sizeof($a);$i++)
 	{
-		$str = substr($str, 1, -1);
+		if ($a[$i] != 0) return false;
 	}
-	return $str;
+	return true;
 }
 
-function parse_nested($input) 
+// normalize whitespaces
+function normalize($input)
 {
-	$input = remp($input);
+	return preg_replace('/\s+/', ' ', $input);
+}
 
-	$len = strlen($input);
-	$substrings = array();
-	$paren_count = 0;
-	$operator = 0;
-	$one_count = 0;
+// for processing of blocks with parenthesis
+function parse_blocks_inner($input) 
+{
+	global $paren_open;
+	global $paren_close;
+	
+	$paren_count = array();
+	for ($i=0;$i<sizeof($paren_open);$i++) $paren_count[] = 0;
+	$substrings = array();	
 	$cur_string = '';
-	for ($i = 0; $i < $len; $i++) 
+	for ($i = 0; $i < strlen($input); $i++) 
 	{
 		$char = $input[$i];
-
-		if (($operator) && (!ctype_alpha($char)))
+		
+		if (in_array($char,$paren_close))
 		{
-			$operator = 0;
-			$substrings[] = $cur_string;
-			$cur_string = '';			
-		}
-
-		if ($char == '}') 
-		{
-			$paren_count -= 1;
-			if ($paren_count == 0)
+			$pos = array_search($char,$paren_close);
+			$paren_count[$pos] -= 1;
+			if (is_zero($paren_count))
 			{
 				$cur_string .= $char;
 				$substrings[] = $cur_string;
@@ -65,127 +123,246 @@ function parse_nested($input)
 				$cur_string .= $char;
 			}
 		}
-		elseif ($char == '{') 
+		elseif (in_array($char,$paren_open))
 		{
-			if (($paren_count == 0) && (strlen($cur_string)))
+			$pos = array_search($char,$paren_open);
+			if (is_zero($paren_count))
 			{
-				$substrings[] = $cur_string;
+				if (strlen($cur_string) != 0) $substrings[] = $cur_string;
 				$cur_string = '';
 			}
-			$one_count = 0;
-			$paren_count += 1;
+			$paren_count[$pos] += 1;
 			$cur_string .= $char;
-		}
-		elseif ($char == ' ') 
-		{
-			if (($paren_count == 0) && (strlen($cur_string)))
-			{
-				$substrings[] = $cur_string;
-				$cur_string = '';
-			}
-			$one_count = 0;
-		}
-		elseif (($char == '\\') && ($paren_count == 0))
-		{
-			if (strlen($cur_string))
-			{
-				$substrings[] = $cur_string;
-				$cur_string = '';
-			}
-			$cur_string .= $char;
-			$operator = 1;
-		}
-		elseif (($char == '_') && ($paren_count == 0))
-		{
-			$cur_string .= $char;
-			$one_count = 1;
-			if (strlen($cur_string))
-			{
-				$substrings[] = $cur_string;
-				$cur_string = '';
-			}
-		}
-		elseif (($char == '^') && ($paren_count == 0))
-		{
-			$cur_string .= $char;
-			$one_count = 1;
-			if (strlen($cur_string))
-			{
-				$substrings[] = $cur_string;
-				$cur_string = '';
-			}
 		}
 		else
 		{
 			$cur_string .= $char;
-			if ($one_count)
-			{
-				$substrings[] = $cur_string;
-				$cur_string = '';
-				$one_count = 0;
-			}
 		}		
 	}
 
+	// append the rest
 	if (strlen($cur_string)) $substrings[] = $cur_string;	
 	
 	return $substrings;
 }
 
+function parse_blocks($input) 
+{
+	global $paren_open;
+	
+	if (in_array($input[0],$paren_open))
+	{
+		$ret = parse_blocks_inner(substr($input, 1, -1));
+		array_unshift($ret,$input[0]);
+		$ret[] = $input[strlen($input)-1];
+		return $ret;
+	}
+	else
+	{
+		return parse_blocks_inner($input); 
+	}
+}
+
+// subscripts are nasty to handle. we change the order here to make the processing easier
+function process_subscripts($in)
+{
+	// a^b => ^ab, a_b => _ab, a^b_c => ^_abc, a_b^c => ^_acb, \int\limits_a^b => 
+	$limits = array();
+	$lst = array();
+	for ($i=0;$i<sizeof($in);$i++)
+	{
+		if ($in[$i] != '\limits')
+		{
+			$lst[] = $in[$i];
+		}
+		else
+		{
+			$limits[] = sizeof($lst);
+		}
+	}
+	for ($i=0;$i<3;$i++)
+	{
+		$lst[] = '@dummy';
+	}
+	
+	$out = array();
+	
+	for ($i=0;$i<sizeof($lst)-3;$i++)
+	{
+		if (($lst[$i+1]=='_') && ($lst[$i+3]=='^'))
+		{
+			$sym = '^_';
+			if (in_array($i+1,$limits)) $sym .= 'L';
+			$out[] = $sym;
+			$out[] = $lst[$i];
+			$out[] = $lst[$i+4];
+			$out[] = $lst[$i+2];
+			$i += 4;
+		}
+		elseif (($lst[$i+1]=='^') && ($lst[$i+3]=='_'))
+		{
+			$sym = '^_';
+			if (in_array($i+1,$limits)) $sym .= 'L';
+			$out[] = $sym;
+			$out[] = $lst[$i];
+			$out[] = $lst[$i+2];
+			$out[] = $lst[$i+4];
+			$i += 4;
+		}
+		elseif (($lst[$i+1]=='_') && ($lst[$i+3]!='^'))
+		{
+			$sym = '_';
+			if (in_array($i+1,$limits)) $sym .= 'L';
+			$out[] = $sym;
+			$out[] = $lst[$i];
+			$out[] = $lst[$i+2];
+			$i += 2;
+		}
+		elseif (($lst[$i+1]=='^') && ($lst[$i+3]!='_'))
+		{
+			$sym = '^';
+			if (in_array($i+1,$limits)) $sym .= 'L';
+			$out[] = $sym;
+			$out[] = $lst[$i];
+			$out[] = $lst[$i+2];
+			$i += 2;
+		}
+		else
+		{
+			if ($lst[$i] != '@dummy') $out[] = $lst[$i];
+		}
+	}
+	
+	return $out;
+}
+
+function parse_nested($input) 
+{
+	global $paren_open;
+	$substrings = array();
+	$parts = parse_blocks($input);
+	
+	for ($i=0;$i<sizeof($parts);$i++)
+	{
+		if (in_array($parts[$i][0],$paren_open))
+		{
+			$substrings[] = $parts[$i];
+		}
+		else
+		{
+			$substr = '';
+			$str = $parts[$i];
+			for ($j = 0; $j < strlen($str); $j++) 
+			{
+				if (in_array($str[$j],array('\\','=')))
+				{		
+					if ($substr != '') $substrings[] = $substr;
+					$substr = $str[$j];
+				}
+				elseif (in_array($str[$j],array('^','_')))
+				{
+					if ($substr != '') $substrings[] = $substr;
+					$substrings[] = $str[$j];
+					$substr = '';
+				}
+				elseif (in_array($str[$j],array(';',',','.')))
+				{
+					$substr .= $str[$j];
+					$substrings[] = $substr;
+					$substr = '';
+				}
+				elseif (in_array($str[$j],array(' ','=')))
+				{
+					if ($substr != '') $substrings[] = $substr;
+					$substr = '';
+				}
+				else
+				{
+					$substr .= $str[$j];
+				}
+			}
+			if ($substr != '') $substrings[] = $substr;
+		}		
+	}
+	
+	$substrings_filter = process_subscripts($substrings);
+	
+	return $substrings_filter;
+}
 
 function latex2mathml($str)
 {
-	$res = '';
-
-	if (strlen($str) == 0) return $res;
-
+	global $paren_open;
+	global $paren_close;
+	global $symbols;
+	
+	$res = '';	
+	if (strlen($str) == 0) return $res;	
+	$str = normalize($str);
 	$parts = parse_nested($str);
 
 	for ($i=0;$i<count($parts);$i++)
 	{
-		if (($parts[$i]=='\sqrt') && ($i+1 < count($parts)))
+		if (($parts[$i] == '{') || ($parts[$i] == '}'))
+		{
+			$i += 0;
+		}
+		elseif (in_array($parts[$i],$paren_open) || in_array($parts[$i],$paren_close))
+		{
+			$res .= $parts[$i];
+		}
+		elseif ((in_array($parts[$i][0],$paren_open)) && (strlen($parts[$i]) > 1))
+		{
+			$res .= latex2mathml($parts[$i]);
+		}
+		elseif ($parts[$i]=='\sqrt')
 		{
 			$res .= '<msqrt><mrow>'.latex2mathml($parts[$i+1]).'</mrow></msqrt>';
 			$i += 1;
 		}
-		elseif (($parts[$i]=='\frac') && ($i+2 < count($parts)))
+		elseif ($parts[$i]=='\frac')
 		{
 			$res .= '<mfrac linethickness="1"><mrow>'.latex2mathml($parts[$i+1]).'</mrow><mrow>'.latex2mathml($parts[$i+2]).'</mrow></mfrac>';
 			$i += 2;
 		}
-		elseif ((substr($parts[$i],-1) == '_') && ($i+1 < count($parts)))
+		elseif ($parts[$i]=='\mathrm')
 		{
-			if (($i+3 < count($parts)) && ($parts[$i+2] == '^'))
-			{
-				$res .= '<msubsup><mrow>'.latex2mathml(substr($parts[$i],0,-1)).'</mrow><mrow>'.latex2mathml($parts[$i+1]).'</mrow><mrow>'.latex2mathml($parts[$i+3]).'</mrow></msubsup>';
-				$i += 3;
-			}
-			else
-			{
-				$res .= '<msub><mrow>'.latex2mathml(substr($parts[$i],0,-1)).'</mrow><mrow>'.latex2mathml($parts[$i+1]).'</mrow></msub>';
-				$i += 1;
-			}
+			$res .= '<mo>'.substr($parts[$i+1], 1, -1).latex2mathml($parts[$i+2]).'</mo>';
+			$i += 2;
 		}
-		elseif ((substr($parts[$i],-1) == '^') && ($i+1 < count($parts)))
+		elseif ($parts[$i]=='^')
 		{
-			if (($i+3 < count($parts)) && ($parts[$i+2] == '_'))
-			{
-				$res .= '<msubsup><mrow>'.latex2mathml(substr($parts[$i],0,-1)).'</mrow><mrow>'.latex2mathml($parts[$i+3]).'</mrow><mrow>'.latex2mathml($parts[$i+1]).'</mrow></msubsup>';
-				$i += 3;
-			}
-			else
-			{
-				$res .= '<msup><mrow>'.latex2mathml(substr($parts[$i],0,-1)).'</mrow><mrow>'.latex2mathml($parts[$i+1]).'</mrow></msup>';
-				$i += 1;
-			}
+			$res .= '<msup><mrow>'.latex2mathml($parts[$i+1]).'</mrow><mrow>'.latex2mathml($parts[$i+2]).'</mrow></msup>';
+			$i += 2;
 		}
-		elseif ($parts[$i]=='\cdot')
+		elseif ($parts[$i]=='_')
 		{
-			$res .= '<mo>&sdot;</mo>';
+			$res .= '<msub><mrow>'.latex2mathml($parts[$i+1]).'</mrow><mrow>'.latex2mathml($parts[$i+2]).'</mrow></msub>';
+			$i += 2;
 		}
-		elseif ($parts[$i]=='\tau')
+		elseif ($parts[$i]=='^_')
 		{
-			$res .= '<mi>&tau;</mi>';
+			$res .= '<msubsup><mrow>'.latex2mathml($parts[$i+1]).'</mrow><mrow>'.latex2mathml($parts[$i+3]).'</mrow><mrow>'.latex2mathml($parts[$i+2]).'</mrow></msubsup>';
+			$i += 3;
+		}
+		elseif ($parts[$i]=='^L')
+		{
+			$res .= '<munderover><mo>'.latex2mathml($parts[$i+1]).'</mo><mo></mo><mo>'.latex2mathml($parts[$i+2]).'</mo></munderover>';
+			$i += 2;
+		}
+		elseif ($parts[$i]=='_L')
+		{
+			$res .= '<munderover><mo>'.latex2mathml($parts[$i+1]).'</mo><mo>'.latex2mathml($parts[$i+2]).'</mo><mo></mo></munderover>';
+			$i += 2;
+		}
+		elseif ($parts[$i]=='^_L')
+		{
+			$res .= '<munderover><mo>'.latex2mathml($parts[$i+1]).'</mo><mo>'.latex2mathml($parts[$i+3]).'</mo><mo>'.latex2mathml($parts[$i+2]).'</mo></munderover>';
+			$i += 3;
+		}
+		elseif (array_key_exists($parts[$i],$symbols))
+		{
+			$res .= '<mo>'.$symbols[$parts[$i]].'</mo>';
 		}
 		else
 		{
