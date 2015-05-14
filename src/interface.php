@@ -46,6 +46,13 @@ function DefEqnB($Latex,$Label='')
 	echo DefEqnGeneric($Latex,'block',$Label);
 }
 
+// very important equation. 
+function DefEqnBImp($Latex,$Label='')
+{
+	if ($Label=='') $Label=$Latex;
+	echo DefEqnGeneric($Latex,'block',$Label,'important');
+}
+
 // defines a chapter.
 function DefChapter($Title,$ShortName='',$Label='')
 {
@@ -64,6 +71,12 @@ function DefSubSection($Title,$ShortName='',$Label='')
 	echo DefSectionGeneric($Title,$ShortName,$Label,2);
 }
 
+// defines a subsection.
+function DefSubSubSection($Title,$ShortName='',$Label='')
+{
+	echo DefSectionGeneric($Title,$ShortName,$Label,3);
+}
+
 // defines a figure.
 function DefFigure($File,$Description='',$Style='',$Label='')
 {
@@ -79,6 +92,25 @@ function DefFigure($File,$Description='',$Style='',$Label='')
 	}	
 	
 	echo DefFigureGeneric($File,$CapLabel,$Description,$Style,$Label);
+}
+
+// === for quotation ===
+
+function Cite($Label)
+{
+	NoCite($Label);
+	echo '['.RefGeneric($Label,'free','',$Label).']';
+}
+
+function NoCite($Label)
+{
+	global $BibKeys;
+	$BibKeys[] = $Label;
+}
+
+function Bibliography()
+{
+	echo print_bibliography();
 }
 
 // === refer to a numbered object ===
@@ -101,12 +133,6 @@ function Ref($Label,$Ext='')
 function RefFree($Label,$Text,$Ext='')
 {
 	echo RefGeneric($Label,'free',$Ext,$Text);
-}
-
-function RefCite($ID)
-{
-	# ToDo: implement literatur reference
-	echo '['.$ID.']';
 }
 
 // === for template ===
@@ -138,6 +164,34 @@ function GetCopyright()
 	echo $COPYRIGHT;
 }
 
+function GetFavIcon()
+{
+	global $ROOTDIR;
+	global $Version;
+	echo '<link rel="shortcut icon" href="'.$ROOTDIR.'/'.$Version.'/template/favicon.ico">';
+}
+
+function GetScreenCSS()
+{
+	global $ROOTDIR;
+	global $Version;
+	echo '<link rel="stylesheet" href="'.$ROOTDIR.'/'.$Version.'/template/screen.css" media="screen">';
+}
+
+function GetPrintCSS()
+{
+	global $ROOTDIR;
+	global $Version;
+	echo '<link rel="stylesheet" href="'.$ROOTDIR.'/'.$Version.'/template/print.css" media="print">';
+}
+
+function GetHeaderImage()
+{
+	global $ROOTDIR;
+	global $Version;
+	echo '<img width="100%" height="100%" src="'.$ROOTDIR.'/'.$Version.'/template/header.jpg" alt="" />';
+}
+		
 function LastUpdate()
 {
 	global $Language;
@@ -178,6 +232,53 @@ function GetNavLinks()
 	$res .= '</tr></table>';
 	echo $res;
 }
+
+// === for drawing source code ===
+
+function format_codeline($line)
+{
+	$line = str_replace("\t",'&nbsp;&nbsp;&nbsp;&nbsp;',$line);
+	$line = str_replace("\r",'',$line);
+	$line = str_replace("\n",'',$line);
+	$line = str_replace("<",'&lt;',$line);
+	$line = str_replace(">",'&gt;',$line);
+
+	return $line;
+}
+
+function HighlightSourcecode($file)
+{
+	global $Language;
+	global $ROOTDIR;
+	global $Version;
+	
+	$code = file($ROOTDIR.'/'.$Version.'/content/'.$Language.'/'.$file);
+	$str = '<table class="code">'."\n";
+	for ($i=0;$i<count($code);$i++)
+	{
+		$str .= '<tr>';
+		$str .= '<td class="ln">'.$i.'</td>';
+		$str .= '<td class="cl">'.format_codeline($code[$i]).'</td>'."\n";
+		$str .= '</tr>';
+	}
+	$str .= '</table>'."\n";
+	echo $str;
+}
+
+function GetDownloadLink($file,$descr)
+{
+	global $Language;
+	global $ROOTDIR;
+	global $Version;
+	
+	$path = $ROOTDIR.'/'.$Version.'/content/'.$Language.'/'.$file;	
+	echo '<a href="'.$path.'">'.$descr.'</a>';
+}
+
+
+
+
+
 
 
 

@@ -29,43 +29,70 @@ $Page = 0;
 $Language = $LANGS_AVAILABLE[0];
 // available html files
 $AllHTMFiles = array();
-// version
+// framework version
 $WebLTX_Version = '1.0';
+// content root directory
+$ROOTDIR = "versions";
+// content version
+$Version = $DEFAULT_VERSION;
 
 function main()
 {
 	global $Page;
 	global $Language;
 	global $AllHTMFiles;
-	global $LANGS_AVAILABLE;
+	global $ROOTDIR;
+	global $Version;
 
 	// Als Trennzeichen ; statt & benutzen
 	ini_set('arg_separator.output','&amp;');
 	ini_set('url_rewriter.tags', '');
+	
+	// which version shall be used
+	GetContentVersion();
 
-	// which language should be used
+	// which language shall be used
 	$Language = GetLanguageCode();
 
-	// Verzeichnis mit den Inhalten
-	$ContentDir = './content/'.$Language.'/';
-
-	// Verzeichnis mit dem Template
-	$TemplateDir = './template/';
-
-	// Finde alle Verzeichnisse und Dateien im Unterverzeichnis
-	$AllHTMFiles = FindAllHTMFiles($ContentDir);
+	// find all html files in the subdirectory
+	$AllHTMFiles = FindAllHTMFiles($ROOTDIR.'/'.$Version.'/content/'.$Language.'/');
 
 	// Welche Datei dieser Liste soll nun angezeigt werden?
 	$Page = GetPage($AllHTMFiles);
 
-	// Erzeuge symbolische Links
+	// read all html pages to analise the php code
 	CreateLinks($AllHTMFiles);
 
-	// Eintrag ins Logfile
+	// make log entry
 	MakeLogEntry();
 
-	// Template laden
-	include($TemplateDir."template.htm"); 
+	// load template
+	include($ROOTDIR.'/'.$Version.'/template/template.htm'); 
+}
+
+function GetContentVersion()
+{
+	global $DEFAULT_VERSION;
+	global $Version;
+	global $ROOTDIR;
+	
+	$version_get = filter_input(INPUT_GET,'version');
+	
+	// version string must be an integer	
+	if (($version_get == NULL) || (!is_numeric($version_get)))
+	{
+		$Version = $DEFAULT_VERSION;
+	}
+	else
+	{
+		$Version = $version_get;
+	}
+	
+	// does the directory exist? If not, take the default version.
+	if (!file_exists($ROOTDIR.'/'.$Version))
+	{
+		$Version = $DEFAULT_VERSION;
+	}
 }
 
 function GetLanguageCode()

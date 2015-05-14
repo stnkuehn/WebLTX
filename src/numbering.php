@@ -22,21 +22,135 @@
 
 // number and link informations about equations, sections, anchors, figures and so on
 $NumberedObjects = array();
+// for bibliography
+$BibKeys = array();
+$BibTex = array();
+$BibInit = false;
+
+function ReadBibTex()
+{
+	global $BibKeys;
+	global $BibTex;
+	global $BIBTEXFILE;
+	global $BibInit;
+	
+	$result = [];
+	$fp = fopen($BIBTEXFILE, "r");
+	if (!$fp)
+	{
+		return $result;
+	}
+	$content = fread($fp,filesize($BIBTEXFILE));
+	$entries = preg_split('/@/',$content);
+	foreach ($entries as $entry)
+	{
+		preg_match('/([A-Za-z]+)\{(.*)\,/', $entry, $matches);
+		if (count($matches) != 3)
+		{
+			continue;
+		}
+		if ((strlen($matches[1]) != 0) && (strlen($matches[2]) != 0))
+		{	
+			$result[$matches[2]] = array("type" => $matches[1]);
+			
+			preg_match_all('/([A-Za-z]+)(\s*)=(\s*)\{(.*)\}/', $entry, $infos);
+			for ($i = 0; $i < count($infos[1]); $i++)
+			{
+				$key = strtolower($infos[1][$i]);
+				$value = $infos[4][$i];
+				$result[$matches[2]][$key] = $value;
+			}
+		}
+	}
+	fclose($fp);
+	ksort($result);
+	
+	$BibTex = $result;
+}
+
+function bib_entry($entry)
+{
+	$type = strtolower($entry['type']);
+	$str = '';
+	if ($type == 'book')
+	{
+		$str = $entry['author'].': ';
+		$str .= '<i>'.$entry['title'].'</i>.';
+		$str .= ' '.$entry['publisher'];
+		$str .= ', '.$entry['year'];
+		if (array_key_exists('number',$entry))
+		{
+			$str .= ', '.$entry['number'];
+		}
+	}
+	else if ($type == 'article')
+	{
+		$str = $entry['author'].': ';
+		$str .= '<i>'.$entry['title'].'</i>.';
+		if (array_key_exists('url',$entry))
+		{
+			$str .= ' '.'<a href="'.$entry['url'].'">'.$entry['journal'].'</a>';
+		}
+		else
+		{
+			$str .= ' '.$entry['journal'];
+		}
+		$str .= ', '.$entry['year'];
+	}
+	else
+	{
+		$str = "unsupported bibtex type. you can implemente the missing feature in function bib_entry";
+	}
+	return $str;
+}
+
+function print_bibliography()
+{
+	global $BibTex;
+	global $BibKeys;
+	global $BibInit;
+	
+	$str = '<table class="bibtex">'."\n";
+	foreach ($BibTex as $key => $entry)
+	{
+		if ((!$BibInit) || (($BibInit) && in_array($key,$BibKeys)))
+		{
+			$str .= '<tr>';
+			$str .= '<td class="bibln">';
+			DefineNumberedObject($key,'cite',array());
+			$str .= '<a name="'.$key.'"></a>';
+			$str .= '['.$key.']';
+			$str .= '</td>';
+			$str .= '<td class="bibtxt">'.bib_entry($entry).'</td>'."\n";
+			$str .= '</tr>';
+		}
+	}
+	$str .= '</table>'."\n";
+	return $str;
+}
 
 function CreateLinks($AllHTMFiles)
 {
 	global $Language;
 	global $NumberedObjects;
+	global $BibKeys;
+	global $BibTex;
+	global $BibInit;
+	global $BIBTEXFILE;
+	global $ROOTDIR;
+	global $Version;
 
-	// calculate for every file the md5 hash
+	// calculate for every HTML file the md5 hash
 	$md5 = array();
 	foreach ($AllHTMFiles as $file)
 	{
 		$md5[] = md5_file($file);
 	}
+	// calculate the md5 for the BibTex file
+	$md5[] = md5_file($BIBTEXFILE);
 
 	// read back the saved hashs 
-	$CacheDir = './cache';
+	$CacheDir = $ROOTDIR.'/'.$Version.'/cache';
 
 	$DataFile = $CacheDir.'/data.'.$Language;	
 	
@@ -47,14 +161,23 @@ function CreateLinks($AllHTMFiles)
 		{
 			// restore data from file
 			$NumberedObjects = $data[1];
+			$BibKeys = $data[2];
+			$BibTex = $data[3];
+			$BibInit = true;
 			return;
 		}
 	}
+	
+	// read BibTex file
+	ReadBibTex();
 
 	// read every single html-page and execute the php code inside
 	CollectGlobalData($AllHTMFiles);
+	
+	// all calls of function Cite and NoCite are executed. 
+	$BibInit = true;
 
-	// create directory when it isn't existing
+	// create directory when it does not existing
 	if (!file_exists($CacheDir))
 	{
 		mkdir($CacheDir);
@@ -62,7 +185,7 @@ function CreateLinks($AllHTMFiles)
 	}
 	
 	// save the data
-	$data = array($md5,$NumberedObjects);
+	$data = array($md5,$NumberedObjects,$BibKeys,$BibTex);
 	file_put_contents($DataFile,serialize($data),LOCK_EX);
 	chmod($DataFile, 0660);
 }
@@ -197,25 +320,40 @@ function DefAnchorGeneric($ShortName,$Order,$Label,$Type)
 	return '<a name="'.$NumberedObjects[$Label]['id'].'"></a>';
 }
 
-function DefEqnGeneric($latex, $type = '', $label = '')
+function DefEqnGeneric($latex, $type = '', $label = '', $flag = '')
 {
 	global $NumberedObjects;
 
+	if ($flag == 'important')
+	{
+	    $cls = 'eqni';
+	}
+	else
+	{
+	    $cls = 'eqn';
+	}
+	
 	$output = '';
 	if ($type == 'block')
 	{
-		$output = '<table class="eqn"><tr class="eqn"><td class="eqn" width=90%><div class="eqn">';
+		$output .= '<table class="'.$cls.'"><tr>';
+                
+		$output .= '<td class="'.$cls.'">';
 		DefineNumberedObject($label,'equation');
-		$output .= '$$';
+		$output .= "\n".'$$';
 		$output .= $latex;
-		$output .= '$$';
-		$output .= '</div></td><td class="eqn">';
+		$output .= '$$'."\n";
+		$output .= '</td>';
+		
+		$output .= '<td class="eqnbr">';
 		if ($label != '')
 		{
-			$output .= '<a name="'.$NumberedObjects[$label]['id'].'"><div class="eqnbr">('.
-				GetNumberString($label).')</div></a>';
+			$output .= '<a name="'.$NumberedObjects[$label]['id'].'">('.
+				GetNumberString($label).')</a>';
 		}
-		$output .= '</td></tr></table>';
+		$output .= '</td>';
+                
+		$output .= '</tr></table>';
 	}
 	else
 	{
@@ -231,15 +369,57 @@ function DefFigureGeneric($File,$CapLabel,$Description='',$Style='',$Label='')
 {
 	global $Language;
 	global $NumberedObjects;
+	global $ROOTDIR;
+	global $Version;
 	
-	if ($Label == '') $Label = $File;
-	DefineNumberedObject($Label,'figure');
+	if ($Label == '')
+	{
+		$Label = $File;
+	}
+	DefineNumberedObject($Label,'figure');	
 	
-	$FilewP = './content/'.$Language.'/'.$File;
+	$FilewP = $ROOTDIR.'/'.$Version.'/content/'.$Language.'/'.$File;
+	
+	if (is_array($Style))
+	{
+		$InnerStyle = $Style[1];
+		$FrameStyle = $Style[0];
+	}
+	else
+	{
+		$InnerStyle = '';
+		$FrameStyle = $Style;
+	}
+	
+	$Fext = pathinfo($FilewP, PATHINFO_EXTENSION);
+	
+	if ($Fext == 'svg')
+	{
+		$Object = '<object data="'.$FilewP.'" type="image/svg+xml" style="width:100%;height:100%"/></object>';
+	}
+	else if ($Fext == 'png')
+	{
+		$Object = '<object data="'.$FilewP.'" type="image/png" style="width:100%;height:100%"/></object>';
+	}
+	else if (($Fext == 'jpg') || (($Fext == 'jpeg')))
+	{
+		$Object = '<object data="'.$FilewP.'" type="image/jpeg" style="width:100%;height:100%"/></object>';
+	}
+	else if ($Fext == 'mp4')
+	{	
+		$Object = '<video width="100%" height="100%" '.$InnerStyle.'>'.
+			'<source src="'.$FilewP.'" type="video/mp4"/>'.
+			'This browser is not compatible with HTML 5'.
+		'</video>';
+	}
+	else
+	{
+		$Object = 'unsuported image or video format';
+	}
 
 	$text = '<a name="'.$NumberedObjects[$Label]['id'].'"></a>';
-	$text .= '<dl class="figure" style="'.$Style.'">';
-	$text .= '<dt class="figure"><embed src="'.$FilewP.'" type="image/svg+xml" style="width:100%;height:100%"/></dt>';
+	$text .= '<dl class="figure" style="'.$FrameStyle.'">';
+	$text .= '<dt class="figure">'.$Object.'</dt>';
 	$text .= '<dd class="figure">'.$CapLabel.' '.GetNumberString($Label);
 	if ($Description != '')
 	{
@@ -254,9 +434,11 @@ function DefFigureGeneric($File,$CapLabel,$Description='',$Style='',$Label='')
 
 function FormatReference($Page,$Lang,$Ref,$Text,$Ext='')
 {
+	global $Version;
+	
 	$refstr = '';
 	if ($Ref != '') $refstr = '#'.$Ref;
-	return '<a '.$Ext.' href="index.php?page='.$Page.'&amp;lang='.$Lang.$refstr.'">'.$Text.'</a>';
+	return '<a '.$Ext.' href="index.php?page='.$Page.'&amp;version='.$Version.'&amp;lang='.$Lang.$refstr.'">'.$Text.'</a>';
 }
 
 function RefGeneric($Label,$Mode,$Ext='',$Text='')
@@ -337,11 +519,13 @@ function GetSideLinksGeneric()
 	{
 		if ($NumberedObjects[$label]['type'] == 'headline')
 		{
-			if (!$NumberedObjects[$label]['prop']['hidden'])
-			{
-				$links .= RefGeneric($label,'shortname','class="left'.
-					($NumberedObjects[$label]['prop']['stage']+1).'" ');
-			}
+			$stage = $NumberedObjects[$label]['prop']['stage'];
+			
+			if ($NumberedObjects[$label]['prop']['hidden']) continue;
+			
+			if ($stage > 2) continue;
+			
+			$links .= RefGeneric($label,'shortname','class="left'.($stage+1).'" ');
 		}
 	}
 	return $links;	
@@ -424,5 +608,6 @@ function GetTopLinksGeneric()
 	$links .= "\n";
 	return $links;
 }
+
 
 

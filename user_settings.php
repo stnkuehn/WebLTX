@@ -26,6 +26,9 @@ $KEYWORDS = array(
 	'en' => array('WebLTX','Latex','PHP')
 );
 
+// current version
+$DEFAULT_VERSION = '1';
+
 // available languages
 $LANGS_AVAILABLE = array('en','de');
 
@@ -37,6 +40,9 @@ $AUTHOR = 'Dr. Steffen Kühn';
 
 // insert your copyright notion here
 $COPYRIGHT = "WebLTX is free software and can be redistributed and modified under terms of the GNU General Public License.";
+
+// insert path and name of your bibtex file here
+$BIBTEXFILE = 'bibtex/literature.bib';
 
 // set timezone
 date_default_timezone_set('Europe/Berlin');
