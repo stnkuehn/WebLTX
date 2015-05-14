@@ -1,0 +1,153 @@
+<?php DefTopAnchor('Usage','Usage',2)?>
+
+<?php DefChapter('Creating Content','Creating Content','Inhalte erstellen')?>
+
+<?php DefSection('Basics','Basics','Grundlegendes')?>
+
+<p>
+The content of your webpage should be inserted in directory <var>content</var> ordered by language. The set of available languages can be determined in file <var>user_settings.php</var> (see also section <?php Ref('Interne Struktur')?>). It's important to make sure that the codes correspond to the country codes defined in <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a>.
+</p>
+
+<p>
+WebLTX employs common HTML extended with <?php RefFree('Funktionen','embedded PHP function calls')?> here and there. Every available language directory contains one or more HTML files. As a rule, everything which is inside of one HTML file is also shown together on the screen, even if the HTML file has more than one chapters or only little parts of a such. You can imagine a HTML file as this was a page would be in a book. But contrary to a book, WebLTX pages can be vary extensively in size. 
+</p>
+
+<p>
+The alphabetical order of the HTML files is also of importance, because it influences the numbering of the captions. For this reason it is recommended to give every file a page number prefix.
+</p>
+
+<?php DefSection('Available Functions','Functions','Funktionen')?>
+
+<?php DefSubSection('Captions','Captions','Überschriften')?>
+
+<p>
+There are three levels of captions:
+<ul>
+<li>Chapters</li>
+<li>Sections</li>
+<li>Subsections</li>
+</ul>
+</p>
+
+<p>
+Chapters can be defined with
+<div class="code"><pre>
+&lt;?php DefChapter('Name','Shortname','Label')?&gt;
+</pre></div>
+<var>Name</var> is in this context the full caption of the chapter and used in the text body. The <var>Shortname</var> is optional and intended for the menu on the left side. The <var>Label</var> is optional too. By dropping it, the caption gets no number and can later not be referenced or linked (Note, that it is however possible to jump to the caption if you define a hidden anchor with <?php RefFree('Anker','<var>DefHiddenAnchor</var>')?>).
+</p>
+
+<p>
+Sections can be defined with
+<div class="code"><pre>
+&lt;?php DefSection('Name','Shortname','Label')?&gt;
+</pre></div>
+and subsections with
+<div class="code"><pre>
+&lt;?php DefSubSection('Name','Shortname','Label')?&gt;
+</pre></div>
+The parameters have the same meaning like in <var>DefChapter</var>.
+</p>
+
+<?php DefSubSection('Formulas and mathematical Expressions','Formulas','Formeln')?>
+
+<p>
+Like in LaTeX, there are two different types of formulas in WebLTX:
+<ul>
+<li>text formulas which are embedded in the floating text and</li>
+<li>equation blocks with numbering.</li>
+</ul>
+</p>
+
+<p>
+A text formula is usually short and normally it is used only for simple relations. Often it consists only of a single symbol for a physical quantity or something similar. 
+</p>
+
+<p>
+You can define a text formula with
+<div class="code"><pre>
+&lt;?php DefEqn('a^2 = b^2 + c^2')?&gt;
+</pre></div>
+The output appears in the floating text like this one: <?php DefEqn('a^2 = b^2 + c^2')?>. It contains no numbering. The syntax is the same like in LaTeX.
+</p>
+
+<p>
+If you want to give an equation a number for a later reference, you can define the formula with :
+<div class="code"><pre>
+&lt;?php DefEqnB('f(x) = \sqrt{1 -x^2}','Label')?&gt;
+</pre></div>
+The output looks like:
+<?php DefEqnB('f(x) = \sqrt{1 -x^2}','formel1')?>
+By the way, the second parameter <var>Label</var> can be dropped. The formula appears in block form but without number, i.e. the output is:
+<?php DefEqnB('f(x) = \sqrt{1 -x^2}')?>
+</p>
+
+<p>
+Block formulas with number can be referenced from anywhere in the text. See section <?php RefByTitle('Referenzen')?> for details.
+</p>
+
+<?php DefSubSection('Figures and Pictures','Figures and Pictures','Abbildungen')?>
+
+<p>
+A picture is worth a thousand words. But nevertheless pictures should not stay for its alone, but always have an description text and still better, a number for a reference in the text block. In WebLTX figures can be inserted with
+<div class="code"><pre>
+&lt;?php DefFigure('Filename','Description','Format-Options','Label')?&gt;
+</pre></div>
+It is important to mention that path and name of the image file <var>Filename</var> is expected to be given relative to the content directory. The parameters <var>Description</var> and <var>Label</var> are self-descriptive. With parameter <var>Format-Options</var> the appearance of the picture can be controlled in large scale, because the here given string is appended at the HTML <var>style</var> variable.
+</p>
+
+<p>
+Here an example. The code
+<div class="code"><pre>
+&lt;?php DefFigure('../../images/example.svg','Description','width:60%;margin-left:10%','figure1')?&gt;
+</pre></div>
+gives 
+<?php DefFigure('../../images/example.svg','Description','width:60%;margin-left:10%','figure1')?>
+</p>
+
+<p>
+By the way, the image itself was created with the <a href="http://sourceforge.net/projects/ipe7/">program ipe</a>. It is very well suited for the generation of arbitrarily scalable vector graphics in EPS and PDF. A conversion to SVG is also possible (with <var>iperender -svg</var>). A special useful feature of ipe is the possibility to embed LaTeX code in the image.
+</p>
+
+<?php DefSubSection('References and Links','References and Links','Referenzen')?>
+
+<p>
+Every numbered object can be referenced and linked in different ways. The methods varies in the text, which is shown by the link. For example it is possible to refer to the same caption via title <?php RefByTitle('Funktionen')?>, short title <?php RefByShortname('Funktionen')?>, number <?php Ref('Funktionen')?> or <?php RefFree('Funktionen','with a free chosen text')?>.
+</p>
+
+<p>
+Here are the corresponding PHP codes:
+<div class="code"><pre>
+&lt;?php RefByTitle('Funktionen')?&gt;
+</pre></div>
+<div class="code"><pre>
+&lt;?php RefByShortname('Funktionen')?&gt;
+</pre></div>
+<div class="code"><pre>
+&lt;?php Ref('Funktionen')?&gt;
+</pre></div>
+<div class="code"><pre>
+&lt;?php RefFree('Funktionen','with a free chosen text')?&gt;
+</pre></div>
+</p>
+
+<?php DefSubSection('Anchors','Anchors','Anker')?>
+
+<p>
+Anchors are invisible markers in the text. Currently, there are only two different functions.	
+</p>
+
+<p>
+Book marks for the topmost horizontal menu bar can be defined with <var>DefTopAnchor</var>. For example, the leftmost entry was created with
+<div class="code"><pre>
+&lt;?php DefTopAnchor('Introduction','Introduction',1)?&gt;
+</pre></div>
+By clicking this link you will come to the point where the anchor was defined. The number (here 1) is important for the order of the book marks.
+</p>
+
+<p>
+The second possible anchor type is the hidden anchor, which can be defined by <var>DefHiddenAnchor</var>. With the hidden anchor it is possible to link to a page, which would be otherwise unreachable. An example for the usage of a hidden anchor is the page <?php RefFree('impressum','Impressum')?>.
+</p>
+
+
+
