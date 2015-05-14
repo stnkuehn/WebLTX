@@ -1,23 +1,41 @@
-body {
-    font-size:12px;
-    font-family:verdana,helvetica,arial,sans-serif;
+#main
+{
+    text-align:left;
+    font-size:85%;
+    line-height:170%;
 }
 
-dl,dt,dd,img.figure
+table.eqn
 {
-    color:#000000;
+    font-size:95%;
+    border:0px;
 }
 
-dl.figure
+table.eqni
 {
-    margin:10px;
-    padding:10px;
-    border:1px solid #d3d3d3;
+    font-size:95%;
+    border:0px;
 }
 
-img.figure
+td.eqni
 {
-    width:100%;
+    width:99%;
+    padding-left:1.5%;
+    border:0px;
+}
+
+td.eqn
+{
+    width:99%;
+    padding-left:1.5%;
+    border:0px;
+}
+
+td.eqnbr
+{
+    margin:0.75%;
+    border:0px;
+    text-align:right;
 }
 
 div.topnav
@@ -40,12 +58,72 @@ div.sidebar
     display:none;
 }
 
-table.eqn {
+a:link,a:visited,a:hover,a:active 
+{
+    color:#000000;
+    text-decoration:none
+}
+
+dl,dt,dd,img.figure
+{
+    color:#000000;
+
+}
+
+dd.figure
+{
+    margin-top:10px;
+    font-size:80%;	
+    line-height:120%;
+}
+
+dl.figure
+{
+    margin:3%;
+}
+
+dt.figure
+{
+    padding:1%;
+    border:1px solid #000000;
+}
+
+img.figure
+{
     width:100%;
 }
 
-div.eqn
+table,th,td,input,textarea
 {
-    margin:10px;
-    margin-left:5%;
+    border:1px solid #000000;
 }
+
+table
+{
+    border-collapse: collapse;
+}
+
+table.code
+{
+	width:100%;
+	border:1;
+	line-height:100%;
+	margin-bottom:60px;
+}
+
+td.ln
+{
+	width:30px;
+	text-align:right;
+	border:1;
+}
+
+td.cl
+{
+	font-family:monospace;
+	border:0;
+	padding-left:50px;
+}
+
+
+

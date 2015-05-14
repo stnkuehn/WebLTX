@@ -5,16 +5,14 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <?php GetAuthor()?>
-<link rel="shortcut icon" href="template/favicon.ico">
+<?php GetFavIcon()?>
 <?php GetKeywords()?>
-<link rel="stylesheet" href="template/screen.css" media="screen">
-<link rel="stylesheet" href="template/print.css" media="print">
+<?php GetScreenCSS()?>
+<?php GetPrintCSS()?>
 <title><?php GetTitel()?></title>
-<script type="text/javascript"
-  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
+  displayAlign: "left",
   tex2jax: {
     inlineMath: [['$','$'], ['\\(','\\)']],
     processEscapes: true
@@ -22,18 +20,20 @@ MathJax.Hub.Config({
   TeX: {
 	Macros: {
       intfunc: "{\\rm \\sqcap}",
-	  sign: "{\\rm sign}",
+	  sgn: "{\\rm sgn}",
       vc: ["{\\mathbf{#1}}",1],
       d: ["{\\mathrm{d}{#1}}", 1]
     }
   }
 });
 </script>
+<!--<script type="text/javascript" src="mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </head>
 
 <body>
 <div class="header">
-<img width="300" height="70" src="template/header.gif" alt="" style="border:0;margin-top:5px;" />
+<?php GetHeaderImage()?>
 </div>
 <div class="topnav"  style="overflow:auto">
 <?php GetTopLinks()?>
@@ -41,18 +41,14 @@ MathJax.Hub.Config({
 <div style="clear:both"></div>
 <div id="page"><br>
 <div class="sidebar"><?php GetSideLinks()?></div>
-<div id="main"><?php GetContent()?><?php GetNavLinks()?></div>
+<div id="main"><?php GetContent()?></div>
 <div style="clear:both"></div>
 <div id="footer">						
 <br>
 <hr style="height:2px">
 <div id="footerlc"><?php LastUpdate()?></div>
-<div id="footerleft">
-<?php RefByShortname('impressum')?>
-</div>
-<div id="footercr">
-<?php GetCopyright();?><br><br>
-</div>
+<div id="footerleft"><?php GetNavLinks()?></div>
+<div id="footercr"><?php GetCopyright()?></div>
 </div>
 </div>
 

@@ -189,7 +189,7 @@ function GetHeaderImage()
 {
 	global $ROOTDIR;
 	global $Version;
-	echo '<img width="100%" height="100%" src="'.$ROOTDIR.'/'.$Version.'/template/header.jpg" alt="" />';
+	echo '<img height="100%" src="'.$ROOTDIR.'/'.$Version.'/template/header.gif" alt="" />';
 }
 		
 function LastUpdate()
