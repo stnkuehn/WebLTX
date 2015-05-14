@@ -3,67 +3,54 @@
 <?php DefChapter('What is WebLTX?','What is WebLTX?','Was ist WebLTX?')?>
 
 <p>
-WebLTX is a slim and lightweight framework for publishing of scientific and mathematical content in the internet. WebLTX was inspired by LaTeX, which is already in use since decades for publishing in print media. Contrary to LaTeX does WebLTX not generate PDF but cross-linked web pages like this one.
+WebLTX is a slim and lightweight framework for publishing scientific content in the internet. Example was <a href="http://de.wikipedia.org/wiki/LaTeX">LaTeX</a>, which is the standard for print media since decades. Contrary to LaTeX, WebLTX produces no PDF but cross-linked websites like this one. Similar to LaTeX is that WebLTX can automatically produces numbers for equations, figures and headlines. Furthermore it formats the output and creates links when needed. Formulas can be inserted in LaTeX syntax because of <a href="https://www.mathjax.org/">MathJax</a>. Since version 1.0, WebLTX supports <a href="http://de.wikipedia.org/wiki/BibTeX">BibTeX files</a> and permalinks.
 </p>
 
 <p>
-WebLTX is no LaTeX. But it has similar advantages. WebLTX is, for example, able to create numbers and links for sections, equations, and figures only by means of textual labels. Furthermore it manages the complete layout of the web page so that the user has no need to bother about it. Another mentionable advantage is the integrated translator for LaTeX equations into MathML/HTML5 expressions.
+The content is written in HTML instead of LaTeX markup language. WebLTX needs furthermore no separate compiling step, that means that every change in the HTML is immediately visible after a browser refresh. WebLTX needs only PHP but no databases. For that reason, it can be used on almost every web server. 
 </p>
 
 <p>
-Contrary to LaTeX, in WebTTX the user writes the content in common HTML. Furthermore there is no compiling step. That means that every change in the HTML code becomes visible directly after a browser reload.
+WebLTX was developed, to support a fast, free and professional distribution of new scientific ideas. It is freely available under terms of the <a href="http://www.gnu.org/licenses">GNU General Public License</a>. WebLTX can be <a href="https://github.com/stnkuehn/WebLTX"><b>downloaded here</b></a>.
 </p>
 
-<p>
-For the operation of WebLTX only PHP is needed. That means in particular that there is no necessity to install databases or other third party software. That makes it possible to run WebLTX on almost every available web hosting service.
-</p>
-
-<p>
-WebLTX was developed and intended to support the fast, free and professional distribution of new scientific ideas. It is freely available and can be redistributed and modified under terms of the <a href="http://www.gnu.org/licenses">GNU General Public License</a>.
-</p>
+<br />
 
 <?php DefChapter('Installation','Installation','Installation')?>
 
 <?php DefSection('Installing WebLTX','Installing WebLTX','WebLTX installieren')?>
 
 <p>
-Installing WebLTX is done by copying all files and directories of the framework in the directory where the web server expects its content. For Apache is this <var>/var/www</var>. Further informations you can find in the documentation of your webserver.
+The installation is easy. In the first step the files of the framework has to be copied into the content directory of the web server software. Please look into its documentation for details. In the second step, WebLTX should be configured by editing the file <var>user_settings.php</var> in the root directory of WebLTX. Banner, favicon, template file and the CSS files are located in <var>versions/$(VERSIONNBR)/template</var>.
 </p>
 
-<p>
-There are a few things to configure. In the file <var>user_settings.php</var> in the root directory of WebLTX you can perform some basic settings. Banner and favicon you can find in subdirectory <var>template</var>.
-</p>
-
-<?php DefSection('Internal Structure of WebLTX','Internal Structure','Interne Struktur')?>
+<?php DefSection('Internal structure of WebLTX','Internal structure','Interne Struktur')?>
 
 <p>
-WebLTX has only a few files. All of them, except <var>index.php</var> and <var>user_settings.php</var>,
-are stored in subdirectories.
+WebLTX has only a few files which are located, except of <var>index.php</var> and <var>user_settings.php</var>, in subdirectories.
 </p>
 
 <table>
 <tr>
-<td><var>src</var></td>
-<td>Contains the PHP source code. Here is implemented the HTML interpreter. There is no need to change something here.</td>
+<td width="30%"><var>src</var></td>
+<td>Contains the PHP source code. Usually, the user should not need to change here anything.</td>
 </tr>
 <tr>
-<td><var>template</var></td>
-<td>The directory contains files which defines the layout, like CSS, template and header image (banner). Advanced users can modify this files to change the look of their webpages according to their preferences.
-</td>
+<td><var>versions/$(VERSIONNBR)/template</var></td>
+<td>Contains files which influence the look of the website. The user can adapt these files freely.</td>
 </tr>
 <tr>
-<td><var>content</var></td>
-<td>The actual content. The directory itself has one or more subdirectories with different language codes, e.g. <var>en</var> for English and <var>de</var> for German. The set of supported languages can be defined in the file <var>user_settings.php</var>.
-</td>
+<td><var>versions/$(VERSIONNBR)/content</var></td>
+<td>The content. The folder has always one or more subdirectories with different language codes, like  <var>en</var> for English or <var>de</var> for German. Possible languages can be defined in file <var>user_settings.php</var>.
 </tr>
 <tr>
-<td><var>cache</var></td>
-<td>This directory is created by the framework. It contains temporary files, which accelerates the interpretation of the HTML code. The cache can be deleted to any time without consequences.
+<td><var>versions/$(VERSIONNBR)/cache</var></td>
+<td>Is created by the framework itself. It contains temporary files which accelerate the execution. It is possible to delete the cache to any time.
 </td>
 </tr>
 <tr>
 <td><var>log</var></td>
-<td>The framework generates logfiles here. The directory can be deleted to any time.</td>
+<td>The automatically created logfile directory.</td>
 </tr>
 </table>
 

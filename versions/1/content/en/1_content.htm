@@ -1,19 +1,20 @@
 <?php DefTopAnchor('Usage','Usage',2)?>
 
-<?php DefChapter('Creating Content','Creating Content','Inhalte erstellen')?>
+<?php DefChapter('Creating content','Creating content','Inhalte erstellen')?>
 
 <?php DefSection('Basics','Basics','Grundlegendes')?>
 
 <p>
-The content of your webpage should be inserted in directory <var>content</var> ordered by language. The set of available languages can be determined in file <var>user_settings.php</var> (see also section <?php Ref('Interne Struktur')?>). It's important to make sure that the codes correspond to the country codes defined in <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a>.
+The directory for the content is <var>versions/$(VERSIONNBR)/content</var> followed by a language code. In the configuration file <var>user_settings.php</var> (See here <?php Ref('Interne Struktur')?>) can be determined which languages are available. Take care that the codes are valid country codes defined in <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a>.
 </p>
 
 <p>
-WebLTX employs common HTML extended with <?php RefFree('Funktionen','embedded PHP function calls')?> here and there. Every available language directory contains one or more HTML files. As a rule, everything which is inside of one HTML file is also shown together on the screen, even if the HTML file has more than one chapters or only little parts of a such. You can imagine a HTML file as this was a page would be in a book. But contrary to a book, WebLTX pages can be vary extensively in size. 
+WebLTX processes normal HTML, extended with <?php RefFree('Funktionen','embedded PHP function calls')?>. Every language directory may contain one or more HTML files. 
+The rule is that everything what is inside of a HTML file is also visible together in the browser window. That is even true if a HTML file contains more than one chapter or only parts of them. Expressed in a different way, a HTML file can be considered as that what a page is in a book. Contrary to a book, WebLTX pages can have very different sizes.
 </p>
 
 <p>
-The alphabetical order of the HTML files is also of importance, because it influences the numbering of the captions. For this reason it is recommended to give every file a page number prefix.
+If there are more than one HTML file, the alphabetical order of the file names determines the order of headlines and sections. For this reason it is recommended to give every file a page number prefix.
 </p>
 
 <?php DefSection('Available Functions','Functions','Funktionen')?>
@@ -21,11 +22,12 @@ The alphabetical order of the HTML files is also of importance, because it influ
 <?php DefSubSection('Captions','Captions','Überschriften')?>
 
 <p>
-There are three levels of captions:
+There are four levels of captions:
 <ul>
-<li>Chapters</li>
-<li>Sections</li>
-<li>Subsections</li>
+<li>chapters</li>
+<li>sections</li>
+<li>subsections</li>
+<li>sub-subsections</li>
 </ul>
 </p>
 
@@ -34,7 +36,7 @@ Chapters can be defined with
 <div class="code"><pre>
 &lt;?php DefChapter('Name','Shortname','Label')?&gt;
 </pre></div>
-<var>Name</var> is in this context the full caption of the chapter and used in the text body. The <var>Shortname</var> is optional and intended for the menu on the left side. The <var>Label</var> is optional too. By dropping it, the caption gets no number and can later not be referenced or linked (Note, that it is however possible to jump to the caption if you define a hidden anchor with <?php RefFree('Anker','<var>DefHiddenAnchor</var>')?>).
+<var>Name</var> is in this context the full caption of the chapter and used in the text body. The <var>Shortname</var> is optional and intended for the menu on the left side. The <var>Label</var> is optional too. Without label the caption has no number and cannot be referenced or linked (Note, that it is however possible to jump to the caption if you define a hidden anchor with <?php RefFree('Anker','<var>DefHiddenAnchor</var>')?>).
 </p>
 
 <p>
@@ -60,7 +62,7 @@ Like in LaTeX, there are two different types of formulas in WebLTX:
 </p>
 
 <p>
-A text formula is usually short and normally it is used only for simple relations. Often it consists only of a single symbol for a physical quantity or something similar. 
+A text formula is usually short and normally it is used only for simple relations. Often it consists only of a single symbol for a physical quantity or something comparable. 
 </p>
 
 <p>
@@ -78,18 +80,18 @@ If you want to give an equation a number for a later reference, you can define t
 </pre></div>
 The output looks like:
 <?php DefEqnB('f(x) = \sqrt{1 -x^2}','formel1')?>
-By the way, the second parameter <var>Label</var> can be dropped. The formula appears in block form but without number, i.e. the output is:
-<?php DefEqnB('f(x) = \sqrt{1 -x^2}')?>
+By the way, a block formula can be emphasised with <var>DefEqnBImp</var>. The formula appears in the block form:
+<?php DefEqnBImp('E = m\,c^2')?>
 </p>
 
 <p>
-Block formulas with number can be referenced from anywhere in the text. See section <?php RefByTitle('Referenzen')?> for details.
+Block formulas can be referenced from everywhere in the text. See section <?php RefByTitle('Referenzen')?> for details.
 </p>
 
 <?php DefSubSection('Figures and Pictures','Figures and Pictures','Abbildungen')?>
 
 <p>
-A picture is worth a thousand words. But nevertheless pictures should not stay for its alone, but always have an description text and still better, a number for a reference in the text block. In WebLTX figures can be inserted with
+A picture is worth a thousand words. But nevertheless pictures should always have a description text and a number. In WebLTX figures are inserted with
 <div class="code"><pre>
 &lt;?php DefFigure('Filename','Description','Format-Options','Label')?&gt;
 </pre></div>
@@ -106,13 +108,13 @@ gives
 </p>
 
 <p>
-By the way, the image itself was created with the <a href="http://sourceforge.net/projects/ipe7/">program ipe</a>. It is very well suited for the generation of arbitrarily scalable vector graphics in EPS and PDF. A conversion to SVG is also possible (with <var>iperender -svg</var>). A special useful feature of ipe is the possibility to embed LaTeX code in the image.
+By the way, the image itself was created with the <a href="http://sourceforge.net/projects/ipe7/">program ipe</a>. It is very well suited for the generation of  scalable vector graphics in EPS and PDF. A conversion to SVG is also possible (with <var>iperender -svg</var>). An especially useful feature of ipe is the possibility to embed LaTeX code in the image.
 </p>
 
 <?php DefSubSection('References and Links','References and Links','Referenzen')?>
 
 <p>
-Every numbered object can be referenced and linked in different ways. The methods varies in the text, which is shown by the link. For example it is possible to refer to the same caption via title <?php RefByTitle('Funktionen')?>, short title <?php RefByShortname('Funktionen')?>, number <?php Ref('Funktionen')?> or <?php RefFree('Funktionen','with a free chosen text')?>.
+Every object with a number can be referenced and linked in different ways. The methods vary in the link's description text. For example, it is possible to refer to the same caption via title <?php RefByTitle('Funktionen')?>, short title <?php RefByShortname('Funktionen')?>, number <?php Ref('Funktionen')?> or <?php RefFree('Funktionen','with a freely chosen text')?>.
 </p>
 
 <p>
@@ -127,7 +129,7 @@ Here are the corresponding PHP codes:
 &lt;?php Ref('Funktionen')?&gt;
 </pre></div>
 <div class="code"><pre>
-&lt;?php RefFree('Funktionen','with a free chosen text')?&gt;
+&lt;?php RefFree('Funktionen','with a freely chosen text')?&gt;
 </pre></div>
 </p>
 
@@ -148,6 +150,28 @@ By clicking this link you will come to the point where the anchor was defined. T
 <p>
 The second possible anchor type is the hidden anchor, which can be defined by <var>DefHiddenAnchor</var>. With the hidden anchor it is possible to link to a page, which would be otherwise unreachable. An example for the usage of a hidden anchor is the page <?php RefFree('impressum','Impressum')?>.
 </p>
+
+
+<?php DefSubSection('Bibliography','Bibliography','Literaturverzeichnis')?>
+
+<p>
+WebLTX makes it easy to cite literature. With 
+<div class="code"><pre>
+&lt;?php Cite('Feynman1985')?&gt;
+</pre></div>
+it is everywhere possible to insert a marker like this <?php Cite('Feynman1985')?>. The label <var>'Feynman1985'</var> must exist in a BibTeX file. Path and name of the BibTeX file has to be set in the configuration file <var>user_settings.php</var>. 
+</p>
+
+<p>
+The output of the bibliography occurs when the function 
+<div class="code"><pre>
+&lt;?php Bibliography()?&gt;
+</pre></div>
+appears. The output looks like this
+<?php Bibliography()?>
+The bibliography contains only such entries which was cited in the text with <var>Cite</var> or <var>NoCite</var>. That means that the BibTeX file can contain much more entries, as the list finally has.
+</p>
+
 
 
 
