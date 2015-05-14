@@ -5,7 +5,7 @@
 <?php DefSection('Grundlegendes','Grundlegendes','Grundlegendes')?>
 
 <p>
-Die Inhalte befinden sich alle im Verzeichnis <var>content</var> sortiert nach Sprachen. Die verfügbaren Sprachen können in der Datei <var>user_settings.php</var> festgelegt werden (Siehe Abschnitt <?php Ref('Interne Struktur')?>). Dabei ist darauf zu achten, dass die Codes den möglichen Ländercodes entsprechen, die in <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a> definiert sind.
+Die Inhalte befinden sich alle im Verzeichnis <var>versions/$(VERSIONNBR)/content</var> sortiert nach Sprachen. Die verfügbaren Sprachen können in der Datei <var>user_settings.php</var> festgelegt werden (Siehe Abschnitt <?php Ref('Interne Struktur')?>). Dabei ist darauf zu achten, dass die Codes den möglichen Ländercodes entsprechen, die in <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a> definiert sind.
 </p>
 
 <p>
@@ -78,8 +78,9 @@ Möchte man eine Formel für die spätere Verwendung referenzierbar machen, so k
 </pre></div>
 Der Output sieht so aus:
 <?php DefEqnB('f(x) = \sqrt{1 -x^2}','formel1')?>
-Der zweite Parameter <var>Label</var> kann im Übrigen weggelassen werden. In diesem Fall erhält die Formel keine Nummerierung, erscheint aber dennoch in abgesetzter Form, d.h. so wie hier dargestellt:
-<?php DefEqnB('f(x) = \sqrt{1 -x^2}')?>
+Zusätzlich gibt es noch die Möglichkeit besonders wichtige Formeln
+<?php DefEqnBImp('E = m\,c^2','formel2')?>
+zu kennzeichnen, indem man statt <var>DefEqnB</var> die Funktion <var>DefEqnBImp</var> verwendet.
 </p>
 
 <p>
@@ -89,7 +90,7 @@ Formeln können im Übrigen überall im Text verlinkt werden. Siehe hierzu Absch
 <?php DefSubSection('Abbildungen','Abbildungen','Abbildungen')?>
 
 <p>
-Ein Bild sagt bekanntlich mehr als tausend Worte. Trotzdem sollten Bilder nicht für sich allein stehen, sondern über eine Beschreibung verfügen, sowie im Text referenziert und verlinkt werden können. In WebLTX können Abbildungen über 
+Ein Bild sagt bekanntlich mehr als tausend Worte. Trotzdem sollten Bilder nicht für sich allein stehen, sondern über eine Beschreibung verfügen, sowie im Text referenziert und verlinkt werden. In WebLTX können Abbildungen über 
 <div class="code"><pre>
 &lt;?php DefFigure('Filename','Beschreibung','Format-Options','Label')?&gt;
 </pre></div>
@@ -148,6 +149,27 @@ der oben ganz links stehende Eintrag erzeugt. Durch Anklicken des Links gelangt 
 <p>
 Die zweite Möglichkeit ist der verborgene Anker, welcher mit <var>DefHiddenAnchor</var> angelegt wird. Mit diesem ist es möglich auf eine Seite zu verlinken, die ansonsten durch keine andere Möglichkeit erreichbar wäre. Ein Beispiel für die Anwendung des verborgenen Ankers ist das <?php RefFree('impressum','Impressum')?>.
 </p>
+
+<?php DefSubSection('Literaturverzeichnis','Literaturverzeichnis','Literaturverzeichnis')?>
+
+<p>
+WebLTX nacht es sehr einfach, Literatur zu zitieren. Mit Hilfe von
+<div class="code"><pre>
+&lt;?php Cite('Feynman1985')?&gt;
+</pre></div>
+kann überall eine Markierung im Text angebracht werden <?php Cite('Feynman1985')?>. Sie dient gleichzeitig als Link. Der Bezeichner <var>'Feynman1985'</var> muss dabei in der BibTeX-Datei definiert sein, die in der <var>user_settings.php</var> eingetragen ist. 
+</p>
+
+<p>
+Die Ausgabe des Literaturverzeichnisses erfolgt mit dem Kommando
+<div class="code"><pre>
+&lt;?php Bibliography()?&gt;
+</pre></div>
+und sieht so aus:
+<?php Bibliography()?>
+Die Literaturliste enthält im Übrigen nur die Angaben, die im Text mit <var>Cite</var> oder <var>NoCite</var> referenziert wurden. Das BibTeX-File kann daher deutlich umfangreicher sein, als die Liste, die letztlich ausgegeben wird.
+</p>
+
 
 
 
