@@ -239,10 +239,10 @@ function format_codeline($line)
 {
 	$line = str_replace("\r",'',$line);
 	$line = str_replace("\n",'',$line);
-	$line = str_replace("<",'&lt;',$line);
-	$line = str_replace(">",'&gt;',$line);
 	$line = str_replace("&",'&amp;',$line);
 	$line = str_replace("\t",'&nbsp;&nbsp;&nbsp;&nbsp;',$line);
+	$line = str_replace("<",'&lt;',$line);
+	$line = str_replace(">",'&gt;',$line);
 
 	return $line;
 }
