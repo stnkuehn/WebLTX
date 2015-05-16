@@ -189,7 +189,7 @@ function GetHeaderImage()
 {
 	global $ROOTDIR;
 	global $Version;
-	echo '<img height="100%" src="'.$ROOTDIR.'/'.$Version.'/template/header.gif" alt="" />';
+	echo '<img style="height:100%" src="'.$ROOTDIR.'/'.$Version.'/template/header.gif" alt="" />';
 }
 		
 function LastUpdate()
@@ -237,11 +237,12 @@ function GetNavLinks()
 
 function format_codeline($line)
 {
-	$line = str_replace("\t",'&nbsp;&nbsp;&nbsp;&nbsp;',$line);
 	$line = str_replace("\r",'',$line);
 	$line = str_replace("\n",'',$line);
 	$line = str_replace("<",'&lt;',$line);
 	$line = str_replace(">",'&gt;',$line);
+	$line = str_replace("&",'&amp;',$line);
+	$line = str_replace("\t",'&nbsp;&nbsp;&nbsp;&nbsp;',$line);
 
 	return $line;
 }

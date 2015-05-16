@@ -305,8 +305,8 @@ function DefSectionGeneric($LongName,$ShortName,$Label,$Stage)
 	$nbr = GetNumberString($Label);
 	if ($nbr != '') $nbr .= ' ';
 	
-	return '<a name="'.$NumberedObjects[$Label]['id'].'"><h'.($Stage+1).'>'.
-		$nbr.$LongName.'</h'.($Stage+1).'></a>';
+	return '<a name="'.$NumberedObjects[$Label]['id'].'"></a><h'.($Stage+1).'>'.
+		$nbr.$LongName.'</h'.($Stage+1).'>';
 }
 
 function DefAnchorGeneric($ShortName,$Order,$Label,$Type)
@@ -348,8 +348,8 @@ function DefEqnGeneric($latex, $type = '', $label = '', $flag = '')
 		$output .= '<td class="eqnbr">';
 		if ($label != '')
 		{
-			$output .= '<a name="'.$NumberedObjects[$label]['id'].'">('.
-				GetNumberString($label).')</a>';
+			$output .= '<a name="'.$NumberedObjects[$label]['id'].'"></a>('.
+				GetNumberString($label).')';
 		}
 		$output .= '</td>';
                 
@@ -395,19 +395,19 @@ function DefFigureGeneric($File,$CapLabel,$Description='',$Style='',$Label='')
 	
 	if ($Fext == 'svg')
 	{
-		$Object = '<object data="'.$FilewP.'" type="image/svg+xml" style="width:100%;height:100%"/></object>';
+		$Object = '<object data="'.$FilewP.'" type="image/svg+xml" style="width:100%;height:100%"></object>';
 	}
 	else if ($Fext == 'png')
 	{
-		$Object = '<object data="'.$FilewP.'" type="image/png" style="width:100%;height:100%"/></object>';
+		$Object = '<object data="'.$FilewP.'" type="image/png" style="width:100%;height:100%"></object>';
 	}
 	else if (($Fext == 'jpg') || (($Fext == 'jpeg')))
 	{
-		$Object = '<object data="'.$FilewP.'" type="image/jpeg" style="width:100%;height:100%"/></object>';
+		$Object = '<object data="'.$FilewP.'" type="image/jpeg" style="width:100%;height:100%"></object>';
 	}
 	else if ($Fext == 'mp4')
 	{	
-		$Object = '<video width="100%" height="100%" '.$InnerStyle.'>'.
+		$Object = '<video style="width:100%;height:100%" '.$InnerStyle.'>'.
 			'<source src="'.$FilewP.'" type="video/mp4"/>'.
 			'This browser is not compatible with HTML 5'.
 		'</video>';
@@ -555,7 +555,7 @@ function GetPrev($class)
 	}
 	else
 	{
-		return '<td '.$class.'>&#8678;</td></div>';
+		return '<td '.$class.'>&#8678;</td>';
 	}
 }
 
@@ -571,7 +571,7 @@ function GetNext($class)
 	}
 	else
 	{
-		return '<td '.$class.'>&#8680;</td></div>';
+		return '<td '.$class.'>&#8680;</td>';
 	}
 }
 
@@ -593,10 +593,17 @@ function GetTopLinksGeneric()
 		}
 	}
 	ksort($top);
-	foreach ($top as $anchor)
+	if (empty($top))
 	{
-		$links .= '<td class="topnav">'.RefGeneric($anchor,'shortname','class="topnav" ').'</td>';
-	}	
+		$links .= '<td class="topnav">'.'&nbsp;'.'</td>';
+	}
+	else
+	{
+		foreach ($top as $anchor)
+		{
+			$links .= '<td class="topnav">'.RefGeneric($anchor,'shortname','class="topnav" ').'</td>';
+		}
+	}
 	$links .= '</tr></table></div>';
 	$links .= '<div class="topnav" style="float:right"><table class="topnav"><tr class="topnav">';
 	$links .= GetPrev('class="topnav"');	
