@@ -3,11 +3,11 @@
 <?php DefChapter('What is WebLTX?','What is WebLTX?','Was ist WebLTX?')?>
 
 <p>
-WebLTX is a slim and lightweight framework for publishing scientific content in the internet. Example was <a href="http://de.wikipedia.org/wiki/LaTeX">LaTeX</a>, which is the standard for print media since decades. Contrary to LaTeX, WebLTX produces no PDF but cross-linked websites like this one. Similar to LaTeX is that WebLTX can automatically produces numbers for equations, figures and headlines. Furthermore it formats the output and creates links when needed. Formulas can be inserted in LaTeX syntax because of <a href="https://www.mathjax.org/">MathJax</a>. Since version 1.0, WebLTX supports <a href="http://de.wikipedia.org/wiki/BibTeX">BibTeX files</a> and permalinks.
+WebLTX is a slim and lightweight framework for publishing scientific content on the internet. It was modelled on <a href="http://de.wikipedia.org/wiki/LaTeX">LaTeX</a>, which is the standard for print media for decades. Contrary to LaTeX, WebLTX produces no PDF but cross-linked websites like this one. Similar to LaTeX is that WebLTX can automatically produce numbers for equations, figures and headlines. Furthermore, it formats the output and creates links when needed. Formulas can be inserted in LaTeX syntax because of <a href="https://www.mathjax.org/">MathJax</a>. Since version 1.0, WebLTX supports <a href="http://de.wikipedia.org/wiki/BibTeX">BibTeX files</a> and permalinks.
 </p>
 
 <p>
-The content is written in HTML instead of LaTeX markup language. WebLTX needs furthermore no separate compiling step, that means that every change in the HTML is immediately visible after a browser refresh. WebLTX needs only PHP but no databases. For that reason, it can be used on almost every web server. 
+The content is written in HTML instead of LaTeX markup language. Additionally, WebLTX needs no separate compiling step, that means that every change in the HTML code is immediately visible after a browser refresh. WebLTX needs only PHP but no databases. For that reason, it can be used on almost every web server. Here is an <a href="http://www.quantino-theory.org">example</a> for a website which was created with WebLTX.
 </p>
 
 <p>
@@ -21,7 +21,7 @@ WebLTX was developed, to support a fast, free and professional distribution of n
 <?php DefSection('Installing WebLTX','Installing WebLTX','WebLTX installieren')?>
 
 <p>
-The installation is easy. In the first step the files of the framework has to be copied into the content directory of the web server software. Please look into its documentation for details. In the second step, WebLTX should be configured by editing the file <var>user_settings.php</var> in the root directory of WebLTX. Banner, favicon, template file and the CSS files are located in <var>versions/$(VERSIONNBR)/template</var>.
+The installation is easy. In the first step the files of the framework have to be copied into the content directory of the web server software. For more details please look into its documentation. In the second step, WebLTX should be configured by editing the file <var>user_settings.php</var> in the root directory of WebLTX. Banner, favicon, template file and the CSS files are located in <var>versions/$(VERSIONNBR)/template</var>.
 </p>
 
 <?php DefSection('Internal structure of WebLTX','Internal structure','Interne Struktur')?>
@@ -33,7 +33,7 @@ WebLTX has only a few files which are located, except of <var>index.php</var> an
 <table>
 <tr>
 <td width="30%"><var>src</var></td>
-<td>Contains the PHP source code. Usually, the user should not need to change here anything.</td>
+<td>Contains the PHP source code. Usually, the user should not need to change anything here.</td>
 </tr>
 <tr>
 <td><var>versions/$(VERSIONNBR)/template</var></td>
@@ -45,7 +45,7 @@ WebLTX has only a few files which are located, except of <var>index.php</var> an
 </tr>
 <tr>
 <td><var>versions/$(VERSIONNBR)/cache</var></td>
-<td>Is created by the framework itself. It contains temporary files which accelerate the execution. It is possible to delete the cache to any time.
+<td>Is created by the framework itself. It contains temporary files which accelerate the execution. It is possible to delete the cache at any time.
 </td>
 </tr>
 <tr>

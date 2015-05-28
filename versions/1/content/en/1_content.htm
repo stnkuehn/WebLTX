@@ -5,16 +5,17 @@
 <?php DefSection('Basics','Basics','Grundlegendes')?>
 
 <p>
-The directory for the content is <var>versions/$(VERSIONNBR)/content</var> followed by a language code. In the configuration file <var>user_settings.php</var> (See here <?php Ref('Interne Struktur')?>) can be determined which languages are available. Take care that the codes are valid country codes defined in <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a>.
+The directory for the content is <var>versions/$(VERSIONNBR)/content</var> followed by a language code. In the configuration file <var>user_settings.php</var> (See here <?php Ref('Interne Struktur')?>) it can be determined which languages are available. Take care that the codes are valid country codes defined in <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a>.
 </p>
 
 <p>
 WebLTX processes normal HTML, extended with <?php RefFree('Funktionen','embedded PHP function calls')?>. Every language directory may contain one or more HTML files. 
-The rule is that everything what is inside of a HTML file is also visible together in the browser window. That is even true if a HTML file contains more than one chapter or only parts of them. Expressed in a different way, a HTML file can be considered as that what a page is in a book. Contrary to a book, WebLTX pages can have very different sizes.
+The rule is that everything what is inside of a HTML file is also visible together in the browser window. That is even true if a HTML file contains more than one chapter or only parts of them. Expressed in a different way, a HTML file can be considered as 
+the same as what a page represents in a book. Contrary to a book, WebLTX pages can have very different sizes.
 </p>
 
 <p>
-If there are more than one HTML file, the alphabetical order of the file names determines the order of headlines and sections. For this reason it is recommended to give every file a page number prefix.
+If there is more than one HTML file, the alphabetical order of the file names determines the order of headlines and sections. For this reason it is recommended to give every file a page number prefix.
 </p>
 
 <?php DefSection('Available Functions','Functions','Funktionen')?>
@@ -74,7 +75,7 @@ The output appears in the floating text like this one: <?php DefEqn('a^2 = b^2 +
 </p>
 
 <p>
-If you want to give an equation a number for a later reference, you can define the formula with :
+If you want to give an equation a number for a later reference, you can define the formula with:
 <div class="code"><pre>
 &lt;?php DefEqnB('f(x) = \sqrt{1 -x^2}','Label')?&gt;
 </pre></div>
@@ -95,7 +96,7 @@ A picture is worth a thousand words. But nevertheless pictures should always hav
 <div class="code"><pre>
 &lt;?php DefFigure('Filename','Description','Format-Options','Label')?&gt;
 </pre></div>
-It is important to mention that path and name of the image file <var>Filename</var> is expected to be given relative to the content directory. The parameters <var>Description</var> and <var>Label</var> are self-descriptive. With parameter <var>Format-Options</var> the appearance of the picture can be controlled in large scale, because the here given string is appended at the HTML <var>style</var> variable.
+It is important to mention that the path and the name of the image file <var>Filename</var> has to be given relative to the content directory. The parameters <var>Description</var> and <var>Label</var> are self-descriptive. With parameter <var>Format-Options</var> the appearance of the picture can be controlled in large scale, because this string is appended at the HTML <var>style</var> variable.
 </p>
 
 <p>
@@ -103,7 +104,7 @@ Here an example. The code
 <div class="code"><pre>
 &lt;?php DefFigure('../../images/example.svg','Description','width:60%;margin-left:10%','figure1')?&gt;
 </pre></div>
-gives 
+results in 
 <?php DefFigure('../../images/example.svg','Description','width:60%;margin-left:10%','figure1')?>
 </p>
 
@@ -140,7 +141,7 @@ Anchors are invisible markers in the text. Currently, there are only two differe
 </p>
 
 <p>
-Book marks for the topmost horizontal menu bar can be defined with <var>DefTopAnchor</var>. For example, the leftmost entry was created with
+Bookmarks for the topmost horizontal menu bar can be defined with <var>DefTopAnchor</var>. For example, the leftmost entry was created with
 <div class="code"><pre>
 &lt;?php DefTopAnchor('Introduction','Introduction',1)?&gt;
 </pre></div>
@@ -169,7 +170,7 @@ The output of the bibliography occurs when the function
 </pre></div>
 appears. The output looks like this
 <?php Bibliography()?>
-The bibliography contains only such entries which was cited in the text with <var>Cite</var> or <var>NoCite</var>. That means that the BibTeX file can contain much more entries, as the list finally has.
+The bibliography contains only such entries which was cited in the text with <var>Cite</var> or <var>NoCite</var>. That means that the BibTeX file can contain many more entries, than the final bibliography has.
 </p>
 
 
