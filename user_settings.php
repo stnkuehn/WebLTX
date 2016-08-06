@@ -42,6 +42,7 @@ $AUTHOR = 'Dr. Steffen Kühn';
 $COPYRIGHT = "WebLTX is free software and can be redistributed and modified under terms of the GNU General Public License.";
 
 // insert path and name of your bibtex file here
+// setting value to NULL disables the feature
 $BIBTEXFILE = 'bibtex/literature.bib';
 
 // set timezone

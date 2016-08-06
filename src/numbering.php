@@ -34,6 +34,8 @@ function ReadBibTex()
 	global $BIBTEXFILE;
 	global $BibInit;
 	
+	if ($BIBTEXFILE == NULL) return;
+
 	$result = [];
 	$fp = fopen($BIBTEXFILE, "r");
 	if (!$fp)
@@ -147,7 +149,10 @@ function CreateLinks($AllHTMFiles)
 		$md5[] = md5_file($file);
 	}
 	// calculate the md5 for the BibTex file
-	$md5[] = md5_file($BIBTEXFILE);
+	if ($BIBTEXFILE != NULL)
+	{
+		$md5[] = md5_file($BIBTEXFILE);
+	}
 
 	// read back the saved hashs 
 	$CacheDir = $ROOTDIR.'/'.$Version.'/cache';
