@@ -425,9 +425,9 @@ function DefFigureGeneric($File,$CapLabel,$Description='',$Style='',$Label='')
 	$text = '<a name="'.$NumberedObjects[$Label]['id'].'"></a>';
 	$text .= '<dl class="figure" style="'.$FrameStyle.'">';
 	$text .= '<dt class="figure">'.$Object.'</dt>';
-	$text .= '<dd class="figure">'.$CapLabel.' '.GetNumberString($Label);
 	if ($Description != '')
 	{
+		$text .= '<dd class="figure">'.$CapLabel.' '.GetNumberString($Label);
 		$text .= ': ';
 		$text .= $Description;
 	}
