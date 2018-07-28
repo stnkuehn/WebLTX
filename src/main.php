@@ -155,7 +155,7 @@ function MakeLogEntry()
 		"\t" . filter_input(INPUT_SERVER,'REQUEST_URI') .
 		"\t" . filter_input(INPUT_SERVER,'HTTP_USER_AGENT') .
 		"\t" . filter_input(INPUT_SERVER,'HTTP_REFERER') .
-		"\t" . gethostbyaddr(filter_input(INPUT_SERVER,'REMOTE_ADDR')) .
+		"\t" . filter_input(INPUT_SERVER,'REMOTE_ADDR') .
 		"\t" . filter_input(INPUT_SERVER,'REMOTE_PORT') .
 		"\r\n",
 		FILE_APPEND
